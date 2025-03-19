@@ -36,6 +36,7 @@ function draw() {
 setInterval(draw, 30);
 
 window.addEventListener('resize', () => {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-});
+ 
+::contentReference[oaicite:8]{index=8}
+ 
+
