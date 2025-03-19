@@ -1,32 +1,41 @@
-const canvas = document.getElementById('matrixCanvas');
-const ctx = canvas.getContext('2d');
+const canvas = document.getElementById('matrix');
+const context = canvas.getContext('2d');
 
-// Set canvas to full screen
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-// Characters - taken from the original Matrix code
-const letters = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズヅブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const nums = '0123456789';
+const alphabet = katakana + latin + nums;
+
 const fontSize = 16;
 const columns = canvas.width / fontSize;
+const rainDrops = Array.from({ length: columns }).map(() => Math.floor(Math.random() * canvas.height));
 
-// Array of drops - one per column
-const drops = Array.from({ length: columns }, () => 1);
-
-// Draw the characters
 function draw() {
-  // Black background with opacity
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  context.fillStyle = 'rgba(0, 0, 0, 0.05)';
+  context.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Green text
-  ctx.fillStyle = '#0f0';
-  ctx.font = `${fontSize}px monospace`;
+  context.font = `${fontSize}px monospace`;
 
-  // Loop over drops
-  drops.forEach((y, i) => {
-    const text = letters.charAt(Math.floor(Math.random() * letters.length));
-    const x = i * fontSize
-::contentReference[oaicite:6]{index=6}
- 
+  rainDrops.forEach((y, index) => {
+    const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+    const x = index * fontSize;
+    context.fillStyle = `hsl(${Math.random() * 360}, 100%, 50%)`;
+    context.fillText(text, x, y);
 
+    if (y > canvas.height && Math.random() > 0.975) {
+      rainDrops[index] = 0;
+    } else {
+      rainDrops[index] = y + fontSize;
+    }
+  });
+}
+
+setInterval(draw, 30);
+
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
