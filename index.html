@@ -1,39 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WindY Executor</title>
-  <link rel="stylesheet" href="style.css">
   <style>
-    body, html {
+    /* Reset default margins and paddings */
+    * {
       margin: 0;
       padding: 0;
-      background-color: black;
-      overflow: hidden;
+      box-sizing: border-box;
+    }
+
+    body {
       font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+      overflow: hidden;
     }
+
+    /* Navigation Bar */
     nav {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 2;
-    }
-    nav ul {
-      list-style: none;
-      display: flex;
-      justify-content: center;
+      background-color: #111;
       padding: 10px 0;
+      text-align: center;
     }
+
+    nav ul {
+      list-style-type: none;
+    }
+
     nav ul li {
+      display: inline;
       margin: 0 15px;
     }
+
     nav ul li a {
-      color: #00ff00;
+      color: #fff;
       text-decoration: none;
-      font-weight: bold;
+      font-size: 18px;
     }
+
+    nav ul li a:hover {
+      color: #00ff00;
+    }
+
+    /* Main Content */
+    main {
+      text-align: center;
+      margin-top: 100px;
+      z-index: 1;
+      position: relative;
+    }
+
+    h1.glow {
+      font-size: 3em;
+      color: #00ff00;
+      text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00, 0 0 40px #00ff00, 0 0 50px #00ff00, 0 0 60px #00ff00, 0 0 70px #00ff00;
+    }
+
+    p.glow {
+      font-size: 1.2em;
+      color: #00ff00;
+      text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 15px #00ff00, 0 0 20px #00ff00;
+    }
+
+    .button-container {
+      margin-top: 30px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 15px 25px;
+      margin: 10px;
+      font-size: 1em;
+      color: #000;
+      background-color: #00ff00;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .button:hover {
+      background-color: #00cc00;
+      transform: scale(1.1);
+    }
+
+    /* Footer */
+    footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      padding: 10px 0;
+      background-color: #111;
+    }
+
+    /* Matrix Rain Canvas */
     #matrix {
       position: absolute;
       top: 0;
@@ -42,40 +105,9 @@
       height: 100%;
       z-index: 0;
     }
-    .center-content {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 1;
-      text-align: center;
-    }
-    .button {
-      display: inline-block;
-      margin: 20px;
-      padding: 15px 30px;
-      background-color: #00ff00;
-      color: black;
-      text-decoration: none;
-      font-size: 18px;
-      border-radius: 8px;
-      transition: background 0.3s;
-    }
-    .button:hover {
-      background-color: #00cc00;
-    }
-    footer {
-      position: fixed;
-      bottom: 10px;
-      width: 100%;
-      text-align: center;
-      color: #00ff00;
-      z-index: 2;
-    }
   </style>
 </head>
 <body>
-
   <!-- Navigation Bar -->
   <nav>
     <ul>
@@ -90,21 +122,65 @@
   <!-- Matrix Rain Canvas -->
   <canvas id="matrix"></canvas>
 
-  <!-- Centered Content -->
-  <div class="center-content">
-    <a href="downloads.html" class="button">Download WindY Executor</a>
-    <a href="https://discord.gg/Dtgn4x7hfd" class="button">Join Discord</a>
-  </div>
+  <!-- Main Content -->
+  <main>
+    <h1 class="glow">Welcome to WindY Executor</h1>
+    <p class="glow">Experience the ultimate Roblox executor with cutting-edge features and seamless performance.</p>
+    <div class="button-container">
+      <a href="downloads.html" class="button">Download</a>
+      <a href="https://discord.gg/Dtgn4x7hfd" class="button">Join Discord</a>
+    </div>
+  </main>
 
   <!-- Footer -->
   <footer>
-    &copy; 2025 WindY Executor. All rights reserved.
+    <p>&copy; 2025 WindY Executor. All rights reserved.</p>
   </footer>
 
   <!-- Matrix Rain Script -->
-  <script src="matrix.js"></script>
+  <script>
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
 
+    // Set canvas to full screen
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Characters - taken from the original Matrix code
+    const letters = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズヅブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポ'.split('');
+
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+
+    // An array of drops - one per column
+    const drops = Array.from({ length: columns }, () => 1);
+
+    // Draw the characters
+    function draw() {
+      // Black background with opacity
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Green text
+      ctx.fillStyle = '#0F0';
+      ctx.font = `${fontSize}px monospace`;
+
+      drops.forEach((y, index) => {
+        const text = letters[Math.floor(Math.random() * letters.length)];
+        const x = index * fontSize;
+        ctx.fillText(text, x, y * fontSize);
+
+        // Randomly reset the drop
+        if (y * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[index] = 0;
+        }
+
+        // Increment Y coordinate
+        drops[index]++;
+      });
+    }
+
+    setInterval(draw, 33);
+  </script>
 </body>
 </html>
-
-
