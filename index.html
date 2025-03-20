@@ -1,186 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WindY Executor</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WindYE</title>
   <style>
-    /* Reset default margins and paddings */
-    * {
+    body {
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #000;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1a1a1a, #333);
       color: #fff;
-      overflow: hidden;
-    }
-
-    /* Navigation Bar */
-    nav {
-      background-color: #111;
-      padding: 10px 0;
       text-align: center;
     }
-
-    nav ul {
-      list-style-type: none;
+    header {
+      background: #222;
+      padding: 20px;
+      box-shadow: 0 0 20px #000;
     }
-
-    nav ul li {
-      display: inline;
-      margin: 0 15px;
+    header h1 {
+      margin: 0;
+      color: #00ffff;
     }
-
-    nav ul li a {
-      color: #fff;
-      text-decoration: none;
-      font-size: 18px;
-    }
-
-    nav ul li a:hover {
-      color: #00ff00;
-    }
-
-    /* Main Content */
     main {
-      text-align: center;
-      margin-top: 100px;
-      z-index: 1;
-      position: relative;
+      padding: 40px;
     }
-
-    h1.glow {
-      font-size: 3em;
-      color: #00ff00;
-      text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00, 0 0 40px #00ff00, 0 0 50px #00ff00, 0 0 60px #00ff00, 0 0 70px #00ff00;
-    }
-
-    p.glow {
-      font-size: 1.2em;
-      color: #00ff00;
-      text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 15px #00ff00, 0 0 20px #00ff00;
-    }
-
     .button-container {
-      margin-top: 30px;
+      margin: 20px;
     }
-
     .button {
-      display: inline-block;
-      padding: 15px 25px;
+      padding: 15px 30px;
       margin: 10px;
-      font-size: 1em;
+      border: none;
+      background: #00ffff;
       color: #000;
-      background-color: #00ff00;
-      text-decoration: none;
-      border-radius: 5px;
-      transition: background-color 0.3s, transform 0.3s;
+      font-weight: bold;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #00ffff;
+      transition: 0.3s;
     }
-
     .button:hover {
-      background-color: #00cc00;
-      transform: scale(1.1);
+      background: #fff;
+      color: #00ffff;
+      box-shadow: 0 0 20px #00ffff;
     }
-
-    /* Footer */
     footer {
-      position: absolute;
+      background: #111;
+      padding: 20px;
+      position: fixed;
       bottom: 0;
       width: 100%;
-      text-align: center;
-      padding: 10px 0;
-      background-color: #111;
+      box-shadow: 0 0 10px #000;
     }
-
-    /* Matrix Rain Canvas */
-    #matrix {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
+    input[type="text"] {
+      padding: 10px;
+      width: 300px;
+      border-radius: 5px;
+      border: none;
     }
   </style>
 </head>
 <body>
-  <!-- Navigation Bar -->
-  <nav>
-    <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="features.html">Features</a></li>
-      <li><a href="executors.html">Executors</a></li>
-      <li><a href="scripts.html">Scripts</a></li>
-      <li><a href="downloads.html">Downloads</a></li>
-    </ul>
-  </nav>
-
-  <!-- Matrix Rain Canvas -->
-  <canvas id="matrix"></canvas>
-
-  <!-- Main Content -->
+  <header>
+    <h1>Welcome to WindYE</h1>
+  </header>
   <main>
-    <h1 class="glow">Welcome to WindY Executor</h1>
-    <p class="glow">Experience the ultimate Roblox executor with cutting-edge features and seamless performance.</p>
     <div class="button-container">
-      <a href="downloads.html" class="button">Download</a>
-      <a href="https://discord.gg/Dtgn4x7hfd" class="button">Join Discord</a>
+      <button class="button">Join Discord</button>
+      <button class="button">Download</button>
+    </div>
+
+    <!-- Music Player -->
+    <div class="button-container">
+      <input type="text" id="musicLink" placeholder="Enter YouTube or MP3 link" />
+      <div style="margin-top: 10px;">
+        <button class="button" onclick="playMusic()">Play Music</button>
+        <button class="button" onclick="stopMusic()">Stop Music</button>
+      </div>
+      <div id="musicPlayer" style="margin-top:20px;"></div>
     </div>
   </main>
-
-  <!-- Footer -->
   <footer>
-    <p>&copy; 2025 WindY Executor. All rights reserved.</p>
+    <p>© 2025 WindYE. All rights reserved.</p>
   </footer>
 
-  <!-- Matrix Rain Script -->
   <script>
-    const canvas = document.getElementById('matrix');
-    const ctx = canvas.getContext('2d');
+    let currentPlayer;
 
-    // Set canvas to full screen
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    function playMusic() {
+      const link = document.getElementById('musicLink').value.trim();
+      const playerDiv = document.getElementById('musicPlayer');
+      playerDiv.innerHTML = '';
 
-    // Characters - taken from the original Matrix code
-    const letters = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズヅブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポ'.split('');
-
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
-
-    // An array of drops - one per column
-    const drops = Array.from({ length: columns }, () => 1);
-
-    // Draw the characters
-    function draw() {
-      // Black background with opacity
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Green text
-      ctx.fillStyle = '#0F0';
-      ctx.font = `${fontSize}px monospace`;
-
-      drops.forEach((y, index) => {
-        const text = letters[Math.floor(Math.random() * letters.length)];
-        const x = index * fontSize;
-        ctx.fillText(text, x, y * fontSize);
-
-        // Randomly reset the drop
-        if (y * fontSize > canvas.height && Math.random() > 0.975) {
-          drops[index] = 0;
+      if (link.includes('youtube.com') || link.includes('youtu.be')) {
+        let videoId = '';
+        if (link.includes('watch?v=')) {
+          videoId = link.split('watch?v=')[1].split('&')[0];
+        } else if (link.includes('youtu.be/')) {
+          videoId = link.split('youtu.be/')[1].split('?')[0];
         }
-
-        // Increment Y coordinate
-        drops[index]++;
-      });
+        playerDiv.innerHTML = `<iframe width="300" height="200" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+      } else if (link.endsWith('.mp3')) {
+        currentPlayer = new Audio(link);
+        currentPlayer.play();
+      } else {
+        alert('https://www.youtube.com/watch?v=1I49_XpmsDs');
+      }
     }
 
-    setInterval(draw, 33);
+    function stopMusic() {
+      if (currentPlayer) {
+        currentPlayer.pause();
+        currentPlayer.currentTime = 0;
+      }
+      document.getElementById('musicPlayer').innerHTML = '';
+    }
   </script>
 </body>
 </html>
+
